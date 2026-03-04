@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 import os
+from pathlib import Path
 from pydantic import BaseModel
 import requests
 from dotenv import load_dotenv
@@ -14,6 +17,9 @@ GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 app = FastAPI()
 
+FRONTEND_DIR = Path(__file__).resolve().parents[2] / "frontend"
+FRONTEND_INDEX = FRONTEND_DIR / "index.html"
+
 app.add_middleware(
 	CORSMiddleware,
 	allow_origins=["*"],
@@ -21,6 +27,13 @@ app.add_middleware(
 	allow_methods=["*"],
 	allow_headers=["*"],
 )
+
+if (FRONTEND_DIR / "css").exists():
+	app.mount("/css", StaticFiles(directory=FRONTEND_DIR / "css"), name="css")
+if (FRONTEND_DIR / "js").exists():
+	app.mount("/js", StaticFiles(directory=FRONTEND_DIR / "js"), name="js")
+if (FRONTEND_DIR / "assets").exists():
+	app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
 class ChatRequest(BaseModel):
 	message: str
@@ -59,7 +72,14 @@ def get_groq_response(user_message: str) -> str:
 
 @app.get("/")
 def read_root():
-	return {"message": "AI Customer Support Chatbot API is running"}
+	if FRONTEND_INDEX.exists():
+		return FileResponse(FRONTEND_INDEX)
+	return {"message": "AI Chatbox API is running"}
+
+
+@app.get("/health")
+def health():
+	return {"message": "AI Chatbox API is running"}
 
 @app.post("/chat")
 def chat(request: ChatRequest):

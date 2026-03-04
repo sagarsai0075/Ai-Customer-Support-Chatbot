@@ -2,7 +2,7 @@
 
 AI-powered chatbox built with **FastAPI** (backend) and a lightweight **HTML/CSS/JavaScript** chat UI (frontend).
 
-- **Live backend API:** https://ai-chatbox-qnvy.onrender.com/
+- **Live app URL:** https://ai-chatbox-qnvy.onrender.com/
 - **Chat endpoint:** `POST /chat`
 - **Model provider:** Groq Chat Completions API
 
@@ -16,16 +16,14 @@ AI-powered chatbox built with **FastAPI** (backend) and a lightweight **HTML/CSS
 ## Project Structure
 
 ```text
-Ai-Customer-Support-Chatbot/
-├── .gitignore
+Ai-Chatbox/
 ├── README.md
 ├── render.yaml
 ├── backend/
 │   ├── requirements.txt
+│   ├── venv/
 │   └── app/
-│       ├── main.py
-│       └── services/
-│           └── render.yaml
+│       └── main.py
 ├── frontend/
 │   ├── index.html
 │   ├── css/
@@ -33,7 +31,6 @@ Ai-Customer-Support-Chatbot/
 │   ├── js/
 │   │   └── chat.js
 │   └── assets/
-└── tests/
 ```
 
 ## Tech Stack
@@ -118,7 +115,7 @@ const API_BASE_URL = "http://127.0.0.1:8000";
 
 ### Health check
 
-- **GET** `/`
+- **GET** `/health`
 - **Response:**
 
 ```json
@@ -158,7 +155,7 @@ To deploy:
 2. Create a new **Web Service** on Render from this repo.
 3. Ensure Render detects and uses `render.yaml`.
 4. Add environment variable `GROQ_API_KEY` in Render dashboard.
-5. Deploy and verify `GET /` and `POST /chat`.
+5. Deploy and verify `GET /health` and `POST /chat`.
 
 ## Common Issues
 
